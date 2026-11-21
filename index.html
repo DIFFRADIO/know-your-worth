@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Know your worth · Freelance day rate calculator</title>
+<meta name="description" content="A friendly day rate calculator for creative freelancers. Work out what to charge in about 15 minutes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Caveat:wght@500;700&family=Inter:wght@400;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d1a0b; --bg2:#142812; --card:#18301499; --ink:#eef5e4; --muted:#a9bc9c; --line:#2c4a24;
+    --lime:#cfe0a8; --lime-dim:#7f9663; --glow:0 0 0 3px rgba(207,224,168,.18);
+    --red:#ff6b4a; --amber:#ffc23a; --radius:14px;
+    --display:"Anton","Impact","Arial Narrow",sans-serif;
+    --hand:"Caveat","Segoe Print","Bradley Hand",cursive;
+    --type:"Special Elite","Courier New",monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--ink);line-height:1.5;font-size:17px;
+    background:radial-gradient(1200px 600px at 70% -10%,rgba(207,224,168,.10),transparent 60%),
+               radial-gradient(900px 500px at 0% 40%,rgba(80,160,40,.18),transparent 60%),var(--bg);
+    background-attachment:fixed;min-height:100vh}
+  /* film grain */
+  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:50;opacity:.16;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+  a{color:var(--lime)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+  header.hero{padding-top:40px;padding-bottom:36px;position:relative}
+  .topbar{display:flex;align-items:center;gap:14px;margin-bottom:40px}
+  .stamp{width:96px;height:96px;flex:none;filter:drop-shadow(0 0 1px #fff)}
+  .topbar .presents{font-family:var(--type);font-size:13px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.4}
+  .topbar .presents b{display:block;color:var(--ink);font-weight:400}
+  .eyebrow{font-family:var(--type);font-size:14px;letter-spacing:.2em;text-transform:uppercase;color:var(--lime);margin:0 0 10px}
+  h1{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(64px,13vw,150px);line-height:.88;margin:0 0 22px;letter-spacing:.005em;
+     color:var(--lime);text-shadow:none}
+  h1 span{display:block;margin-top:12px;color:var(--ink);text-shadow:none;font-size:.55em}
+  .lede{font-size:20px;max-width:620px;color:var(--muted);margin:0 0 18px}
+  .scribble{font-family:var(--hand);font-size:30px;color:var(--ink);transform:rotate(-2deg);display:inline-block;margin:0 0 26px;opacity:.9}
+  .scribble u{text-decoration-color:var(--lime);text-decoration-thickness:2px;text-underline-offset:5px}
+  .btn{display:inline-block;background:var(--lime);color:#0d1a0b;text-decoration:none;padding:14px 24px;border-radius:999px;font-weight:700;border:0;cursor:pointer;font-size:16px;
+       text-transform:uppercase;letter-spacing:.06em;box-shadow:var(--glow);font-family:inherit}
+  .btn:hover{filter:brightness(1.08)}
+  .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);box-shadow:none}
+  .btn:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid var(--lime);outline-offset:2px}
+
+  .intro{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin:8px 0 44px}
+  .tip{border:1.5px solid var(--line);border-radius:6px;padding:18px 20px;background:rgba(20,40,18,.6);position:relative}
+  .tip h3{margin:0 0 6px;font-family:var(--hand);font-weight:700;font-size:28px;line-height:1.1;color:var(--lime)}
+  .tip p{margin:0;color:var(--muted);font-size:15px}
+
+  .layout{display:grid;grid-template-columns:minmax(0,1fr) 390px;gap:28px;align-items:start;padding-bottom:48px}
+  @media (max-width:900px){.layout{grid-template-columns:1fr}}
+
+  .step{background:rgba(20,40,18,.72);backdrop-filter:blur(2px);border:1px solid var(--line);border-radius:var(--radius);padding:26px;margin-bottom:18px}
+  .step-num{font-family:var(--type);font-size:13px;color:var(--lime);text-transform:uppercase;letter-spacing:.18em}
+  .step h2{font-family:var(--display);font-weight:400;text-transform:uppercase;margin:6px 0 4px;font-size:clamp(28px,4vw,38px);line-height:1;letter-spacing:.01em}
+  .step .why{font-family:var(--hand);font-size:24px;line-height:1.2;color:var(--muted);margin:6px 0 16px}
+  .field{display:grid;grid-template-columns:minmax(0,1fr) 170px;gap:6px 16px;align-items:center;padding:12px 0;border-top:1px dashed var(--line)}
+  .field:first-of-type{border-top:0}
+  .field label{font-weight:600}
+  .field .hint{grid-column:1/-1;color:var(--muted);font-size:14px;margin-top:-2px}
+  @media (max-width:520px){.field{grid-template-columns:1fr}}
+  .input{display:flex;align-items:center;background:rgba(207,224,168,.08);border:1.5px solid var(--lime-dim);border-radius:8px;padding:0 12px;transition:box-shadow .15s,border-color .15s}
+  .input:focus-within{border-color:var(--lime);box-shadow:var(--glow)}
+  .input span{color:var(--lime);font-weight:700}
+  .input input{flex:1;min-width:0;border:0;background:transparent;font:inherit;font-weight:700;padding:10px 6px;text-align:right;color:var(--ink)}
+  .input input::placeholder{color:#6f8a62;font-weight:400}
+  .input input:focus{outline:none}
+  .calc{display:flex;justify-content:space-between;align-items:center;background:rgba(0,0,0,.28);border-radius:8px;padding:14px 16px;margin-top:12px;font-weight:600}
+  .calc small{display:block;font-weight:400;color:var(--muted);font-size:14px}
+  .calc strong{font-family:var(--display);font-weight:400;font-size:30px;color:var(--lime);letter-spacing:.02em}
+
+  aside.answer{position:sticky;top:20px}
+  .answer-card{background:linear-gradient(180deg,#1d3a16,#122510);border:2px solid var(--lime);border-radius:var(--radius);padding:24px;box-shadow:none}
+  .answer-card h2{margin:0;font-family:var(--type);font-weight:400;font-size:14px;text-transform:uppercase;letter-spacing:.2em;color:var(--muted)}
+  .big{font-family:var(--display);font-size:92px;line-height:1;margin:8px 0 2px;color:var(--lime);text-shadow:none}
+  .big-label{font-weight:700;margin:0;text-transform:uppercase;letter-spacing:.04em}
+  .big-note{font-family:var(--hand);font-size:22px;line-height:1.15;color:var(--muted);margin:4px 0 16px}
+  .rates{display:grid;gap:10px}
+  .rate{background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:8px;padding:12px 14px;display:flex;justify-content:space-between;gap:12px;align-items:center}
+  .rate b{font-family:var(--display);font-weight:400;font-size:30px;white-space:nowrap;letter-spacing:.02em}
+  .rate div small{display:block;color:var(--muted);font-size:13px}
+  .reality{margin-top:16px;border:1.5px dashed var(--lime-dim);border-radius:8px;padding:14px}
+  .reality h3{margin:0 0 8px;font-family:var(--hand);font-size:28px;font-weight:700;color:var(--lime);line-height:1}
+  .reality .calc{background:rgba(0,0,0,.3)!important}
+  .verdict{margin:10px 0 0;padding:10px 12px;border-radius:6px;font-weight:700;font-size:15px}
+  .verdict.good{background:rgba(207,224,168,.15);color:var(--lime)}
+  .verdict.mid{background:rgba(255,194,58,.14);color:var(--amber)}
+  .verdict.bad{background:rgba(255,107,74,.14);color:var(--red)}
+  .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+  .actions .btn{padding:10px 16px;font-size:13px}
+
+  section.guide{padding:56px 0;border-top:1px solid var(--line);background:rgba(0,0,0,.18)}
+  section.guide h2{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:clamp(36px,5vw,52px);line-height:1;margin:0 0 16px;color:var(--lime)}
+  .two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:36px}
+  .quote{font-family:var(--hand);font-size:36px;line-height:1.1;margin:20px 0;transform:rotate(-1.5deg);
+         border:2px solid var(--ink);border-radius:40% 55% 45% 60%/55% 45% 60% 40%;padding:22px 26px;display:inline-block}
+  ul.clean{padding-left:20px}
+  ul.clean li{margin-bottom:10px}
+  ul.clean li::marker{color:var(--lime)}
+  ul.clean em{font-family:var(--hand);font-style:normal;font-size:24px;color:var(--lime)}
+
+  .mbar{display:none}
+  @media (max-width:900px){.mbar{display:flex;position:fixed;left:0;right:0;bottom:0;justify-content:space-between;align-items:center;background:var(--lime);padding:12px 20px;font-weight:700;z-index:40;text-decoration:none;color:#0d1a0b;text-transform:uppercase;letter-spacing:.05em}.mbar b{font-family:var(--display);font-weight:400;font-size:30px}body{padding-bottom:64px}}
+  footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+  footer p{margin:4px 0}
+  footer .sign{font-family:var(--type);letter-spacing:.12em;text-transform:uppercase;color:var(--ink)}
+  .sr{position:absolute;left:-9999px}
+  @media print{
+    body::before,.mbar,header.hero .btn,.intro,.actions,section.guide,.step .why{display:none!important}
+    body{background:#fff;color:#000}
+    .step,.answer-card{background:#fff;border-color:#999;box-shadow:none}
+    h1,.big,.calc strong{color:#000;text-shadow:none}
+    .layout{grid-template-columns:1fr}
+    aside.answer{position:static}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="topbar">
+    <svg class="stamp" viewBox="0 0 100 100" role="img" aria-label="Urbanstamp stamp">
+      <defs><path id="ring" d="M50,50 m-35.5,0 a35.5,35.5 0 1,1 71,0 a35.5,35.5 0 1,1 -71,0"/>
+        <filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="1" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="1.6"/></filter></defs>
+      <g filter="url(#rough)" fill="none" stroke="#eef5e4">
+        <circle cx="50" cy="50" r="46" stroke-width="2.5"/><circle cx="50" cy="50" r="28" stroke-width="1.5"/>
+      </g>
+      <g filter="url(#rough)" fill="#eef5e4" font-family="Special Elite, Courier New, monospace">
+        <text font-size="10.5"><textPath href="#ring" textLength="222" lengthAdjust="spacing">URBANSTAMP ✦ GREEN ROOM ✦</textPath></text>
+        <text x="50" y="42" text-anchor="middle" font-size="8.5">KNOW</text>
+        <text x="50" y="53" text-anchor="middle" font-size="8.5">YOUR</text>
+        <text x="50" y="64" text-anchor="middle" font-size="8.5">WORTH</text>
+      </g>
+    </svg>
+    <div class="presents">Urbanstamp presents<b>The Green Room</b></div>
+  </div>
+  <p class="eyebrow">Freelance day rate calculator</p>
+  <h1>Know your worth <span>What should I charge?</span></h1>
+  <p class="lede">Five short steps to a day rate that actually pays your bills. It takes about 15 minutes, and a rough guess is fine: you can always come back.</p>
+  <p class="scribble">Your worth <u>isn't a guess.</u></p><br>
+  <a class="btn" href="#step1">Let's go</a>
+</header>
+
+<div class="wrap">
+  <div class="intro">
+    <div class="tip"><h3>Before you start</h3><p>Have these handy if you can: your monthly living costs, and what you spend on your work.</p></div>
+    <div class="tip"><h3>Fill in the boxes below with your values</h3><p>Everything else works itself out. Your answer updates as you type.</p></div>
+    <div class="tip"><h3>Example numbers are already in</h3><p>Change them to yours. Your numbers are saved in this browser only, so nobody else sees them.</p></div>
+  </div>
+
+  <div class="layout">
+    <main>
+      <!-- Step 1 -->
+      <section class="step" id="step1">
+        <div class="step-num">Step 1 of 5</div>
+        <h2>What do you need to live on?</h2>
+        <p class="why">The money you need to take home in a year.</p>
+        <div class="field">
+          <label for="takeHome">Take-home pay you need for the year</label>
+          <div class="input"><span>£</span><input id="takeHome" type="number" inputmode="decimal" min="0" step="100"></div>
+          <div class="hint">Not sure? Add up your monthly living costs and times by 12.</div>
+        </div>
+      </section>
+
+      <!-- Step 2 -->
+      <section class="step" id="step2">
+        <div class="step-num">Step 2 of 5</div>
+        <h2>What does your work cost you each year?</h2>
+        <p class="why">Kit, software, insurance, phone, travel, training. Spread big buys, like a camera, over 3 years.</p>
+        <div class="field">
+          <label for="kit">Equipment and kit</label>
+          <div class="input"><span>£</span><input id="kit" class="cost" type="number" inputmode="decimal" min="0" step="50"></div>
+          <div class="hint">Cameras, laptop, tools. Spread big buys over 3 years.</div>
+        </div>
+        <div class="field">
+          <label for="software">Software and subscriptions</label>
+          <div class="input"><span>£</span><input id="software" class="cost" type="number" inputmode="decimal" min="0" step="50"></div>
+          <div class="hint">Editing, design, music, storage.</div>
+        </div>
+        <div class="field">
+          <label for="insurance">Insurance</label>
+          <div class="input"><span>£</span><input id="insurance" class="cost" type="number" inputmode="decimal" min="0" step="10"></div>
+          <div class="hint">For example public liability or equipment cover.</div>
+        </div>
+        <div class="field">
+          <label for="phone">Phone and internet</label>
+          <div class="input"><span>£</span><input id="phone" class="cost" type="number" inputmode="decimal" min="0" step="10"></div>
+        </div>
+        <div class="field">
+          <label for="travel">Travel</label>
+          <div class="input"><span>£</span><input id="travel" class="cost" type="number" inputmode="decimal" min="0" step="10"></div>
+        </div>
+        <div class="field">
+          <label for="training">Training and courses</label>
+          <div class="input"><span>£</span><input id="training" class="cost" type="number" inputmode="decimal" min="0" step="10"></div>
+        </div>
+        <div class="field">
+          <label for="workspace">Workspace or studio hire</label>
+          <div class="input"><span>£</span><input id="workspace" class="cost" type="number" inputmode="decimal" min="0" step="10"></div>
+        </div>
+        <div class="field">
+          <label for="other">Anything else</label>
+          <div class="input"><span>£</span><input id="other" class="cost" type="number" inputmode="decimal" min="0" step="10"></div>
+        </div>
+        <div class="calc"><div>Total work costs<small>Worked out for you.</small></div><strong id="outCosts">£0</strong></div>
+      </section>
+
+      <!-- Step 3 -->
+      <section class="step" id="step3">
+        <div class="step-num">Step 3 of 5</div>
+        <h2>Putting money aside for tax</h2>
+        <p class="why">The share of your income you set aside for tax and National Insurance.</p>
+        <div class="field">
+          <label for="tax">Share of your income to put aside for tax and National Insurance</label>
+          <div class="input"><input id="tax" type="number" inputmode="decimal" min="0" max="90" step="1"><span>%</span></div>
+          <div class="hint">Many people use 20 to 30%. Check <a href="https://www.gov.uk/self-employed-national-insurance-rates" target="_blank" rel="noopener">HMRC guidance</a> for your situation.</div>
+        </div>
+      </section>
+
+      <!-- Step 4 -->
+      <section class="step" id="step4">
+        <div class="step-num">Step 4 of 5</div>
+        <h2>How many days do you actually get paid for?</h2>
+        <p class="why">Add your holidays, bank holidays, sick days and admin time. We'll work out your real paid days.</p>
+        <div class="field">
+          <label for="daysWeek">Days you work in a normal week</label>
+          <div class="input"><input id="daysWeek" type="number" inputmode="decimal" min="0" max="7" step="0.5"><span>days</span></div>
+        </div>
+        <div class="field">
+          <label for="holWeeks">Weeks of holiday a year</label>
+          <div class="input"><input id="holWeeks" type="number" inputmode="decimal" min="0" max="52" step="0.5"><span>weeks</span></div>
+          <div class="hint">Everyone needs rest. Count it in.</div>
+        </div>
+        <div class="field">
+          <label for="bankHols">Bank holidays</label>
+          <div class="input"><input id="bankHols" type="number" inputmode="decimal" min="0" step="1"><span>days</span></div>
+          <div class="hint">There are 8 a year in England and Wales.</div>
+        </div>
+        <div class="field">
+          <label for="sick">Sick days to allow for</label>
+          <div class="input"><input id="sick" type="number" inputmode="decimal" min="0" step="1"><span>days</span></div>
+        </div>
+        <div class="field">
+          <label for="admin">Time spent on admin, marketing and finding work</label>
+          <div class="input"><input id="admin" type="number" inputmode="decimal" min="0" max="95" step="1"><span>%</span></div>
+          <div class="hint">Emails, invoices, pitching. Most freelancers spend a quarter to a third of their time on this.</div>
+        </div>
+        <div class="calc"><div>Days you actually get paid for<small>Worked out for you. It's usually fewer than people think.</small></div><strong id="outDays">0</strong></div>
+      </section>
+
+      <!-- Step 5 -->
+      <section class="step" id="step5">
+        <div class="step-num">Step 5 of 5</div>
+        <h2>Your working day and buffer</h2>
+        <p class="why">Your hours per day, and a buffer for quiet months.</p>
+        <div class="field">
+          <label for="hours">Hours in your working day</label>
+          <div class="input"><input id="hours" type="number" inputmode="decimal" min="0" max="24" step="0.5"><span>hrs</span></div>
+        </div>
+        <div class="field">
+          <label for="buffer">Buffer for quiet months and surprises</label>
+          <div class="input"><input id="buffer" type="number" inputmode="decimal" min="0" max="100" step="1"><span>%</span></div>
+          <div class="hint">10 to 20% is a good range.</div>
+        </div>
+      </section>
+    </main>
+
+    <aside class="answer" id="answer" aria-live="polite">
+      <div class="answer-card">
+        <h2>Your answer</h2>
+        <p class="big" id="outRec">–</p>
+        <p class="big-label">Your recommended day rate</p>
+        <p class="big-note">This is what to quote. It includes a buffer for quiet months.</p>
+        <div class="rates">
+          <div class="rate"><div>Minimum day rate<small>Charge less than this and you're losing money.</small></div><b id="outMin">–</b></div>
+          <div class="rate"><div>Half-day rate<small>Half days are usually priced at a bit more than half.</small></div><b id="outHalf">–</b></div>
+          <div class="rate"><div>Hourly rate<small>Use for small jobs only. Day rates are better for you.</small></div><b id="outHour">–</b></div>
+        </div>
+
+        <div class="reality">
+          <h3>Reality check <span style="font-size:20px;color:var(--muted)">(optional)</span></h3>
+          <div class="field" style="padding:0;border:0">
+            <label for="current">What you charge now for a day</label>
+            <div class="input"><span>£</span><input id="current" type="number" inputmode="decimal" min="0" step="5" placeholder="Leave blank"></div>
+            <div class="hint">Leave blank if you don't have a day rate yet.</div>
+          </div>
+          <div id="realityOut" hidden>
+            <div class="calc"><div>Gap to your recommended rate</div><strong id="outGap">£0</strong></div>
+            <p class="verdict" id="verdict"></p>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn" id="copyBtn" type="button">Copy my rates</button>
+          <button class="btn ghost" id="printBtn" type="button">Print</button>
+          <button class="btn ghost" id="resetBtn" type="button">Reset</button>
+        </div>
+        <p class="sr" id="copyStatus" aria-live="polite"></p>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<section class="guide">
+  <div class="wrap two">
+    <div>
+      <h2>Why it's higher than you expect</h2>
+      <p>You don't get paid for every day of the year. Holidays, sick days, admin and finding work all take time, and your rate has to cover them.</p>
+      <p class="quote">That's not greedy. It's what it costs to keep doing your work.</p>
+    </div>
+    <div>
+      <h2>Using your rate</h2>
+      <ul class="clean">
+        <li>When someone asks your rate, say the number, then stop. No apology needed.</li>
+        <li>If their budget is lower, offer less work, not a lower rate: <em>"For that budget, I can do a half day."</em></li>
+        <li>Check your rate every year, or when your costs change.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<a class="mbar" href="#answer">Your day rate <b id="outRecM">–</b></a>
+
+<footer>
+  <div class="wrap">
+    <p>This is a starting point, not financial or tax advice. For tax, check the guidance on <a href="https://www.gov.uk/working-for-yourself" target="_blank" rel="noopener">gov.uk</a> or speak to an accountant.</p>
+    <p id="credit" class="sign">Made by Urbanstamp · The Green Room. Network. Collab. Create.</p>
+  </div>
+</footer>
+
+<script>
+(function(){
+  // Defaults match the example numbers in the original spreadsheet.
+  // Percentages are stored as whole numbers here (25 = 25%).
+  var DEFAULTS = {
+    takeHome:21000, kit:1000, software:1500, insurance:150, phone:0, travel:400,
+    training:0, workspace:0, other:0, tax:25, daysWeek:7, holWeeks:2, bankHols:0,
+    sick:0, admin:30, hours:14, buffer:15, current:100
+  };
+  var KEY = 'dayRateCalc.v1';
+  var ids = Object.keys(DEFAULTS);
+  var $ = function(id){ return document.getElementById(id); };
+
+  // Excel-compatible helpers
+  function ceilTo(x, m){ return Math.ceil(x / m - 1e-9) * m; }      // CEILING(x, m)
+  function round0(x){ return Math.sign(x) * Math.round(Math.abs(x)); } // ROUND(x, 0), half away from zero
+  function num(id){ var v = parseFloat($(id).value); return isNaN(v) ? 0 : v; }
+  var gbp = new Intl.NumberFormat('en-GB',{style:'currency',currency:'GBP',maximumFractionDigits:0});
+  function money(x){ return x === '' ? '–' : gbp.format(x); }
+
+  function calculate(){
+    var costs = ['kit','software','insurance','phone','travel','training','workspace','other']
+      .reduce(function(s,id){ return s + num(id); }, 0);                                 // C24
+    var tax = num('tax')/100, admin = num('admin')/100, buffer = num('buffer')/100;
+    var paidDays = round0(((52 - num('holWeeks')) * num('daysWeek') - num('bankHols') - num('sick')) * (1 - admin)); // C35
+    var hours = num('hours');
+
+    var min = '', rec = '', half = '', hourly = '';
+    if (paidDays > 0 && tax < 1) {
+      min  = round0((num('takeHome') + costs) / (1 - tax) / paidDays);                  // C8
+      rec  = ceilTo(min * (1 + buffer), 5);                                              // C7
+      half = ceilTo(rec * 0.6, 5);                                                       // C9
+      if (hours > 0) hourly = round0(rec / hours);                                       // C10
+    }
+
+    $('outCosts').textContent = gbp.format(costs);
+    $('outDays').textContent = paidDays;
+    $('outRec').textContent = money(rec);
+    $('outRecM').textContent = money(rec);
+    $('outMin').textContent = money(min);
+    $('outHalf').textContent = money(half);
+    $('outHour').textContent = money(hourly);
+
+    // Reality check (C43 / D43)
+    var curRaw = $('current').value.trim();
+    var box = $('realityOut'), v = $('verdict');
+    if (curRaw === '' || rec === '') { box.hidden = true; }
+    else {
+      var cur = parseFloat(curRaw) || 0;
+      box.hidden = false;
+      $('outGap').textContent = gbp.format(Math.max(rec - cur, 0));
+      if (cur >= rec) { v.className='verdict good'; v.textContent="You're on track. Keep going!"; }
+      else if (cur >= min) { v.className='verdict mid'; v.textContent="You're covering your costs, but there's no buffer. Nudge it up."; }
+      else { v.className='verdict bad'; v.textContent="You're charging less than it costs you. Time to raise your rate."; }
+    }
+
+    return {rec:rec,min:min,half:half,hourly:hourly,paidDays:paidDays,costs:costs};
+  }
+
+  function save(){
+    var data = {};
+    ids.forEach(function(id){ data[id] = $(id).value; });
+    try { localStorage.setItem(KEY, JSON.stringify(data)); } catch(e){}
+  }
+  function load(){
+    var data = null;
+    try { data = JSON.parse(localStorage.getItem(KEY)); } catch(e){}
+    ids.forEach(function(id){
+      $(id).value = (data && data[id] !== undefined) ? data[id] : DEFAULTS[id];
+    });
+  }
+
+  ids.forEach(function(id){
+    $(id).addEventListener('input', function(){ calculate(); save(); });
+  });
+
+  $('resetBtn').addEventListener('click', function(){
+    try { localStorage.removeItem(KEY); } catch(e){}
+    load(); calculate();
+  });
+  $('printBtn').addEventListener('click', function(){ window.print(); });
+  $('copyBtn').addEventListener('click', function(){
+    var r = calculate();
+    var text = 'My freelance rates\n' +
+      'Recommended day rate: ' + money(r.rec) + '\n' +
+      'Minimum day rate: ' + money(r.min) + '\n' +
+      'Half-day rate: ' + money(r.half) + '\n' +
+      'Hourly rate: ' + money(r.hourly) + '\n' +
+      '(Based on ' + r.paidDays + ' paid days a year)';
+    var btn = $('copyBtn');
+    navigator.clipboard.writeText(text).then(function(){
+      btn.textContent = 'Copied!'; $('copyStatus').textContent = 'Rates copied';
+      setTimeout(function(){ btn.textContent = 'Copy my rates'; }, 1800);
+    }, function(){ btn.textContent = 'Copy failed'; });
+  });
+
+  load();
+  calculate();
+})();
+</script>
+</body>
+</html>
